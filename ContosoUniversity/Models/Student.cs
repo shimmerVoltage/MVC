@@ -24,7 +24,7 @@ namespace ContosoUniversity.Models
         public DateTime EnrollmentDate { get; set; }
 
         [DisplayName("Студент")]
-        public string FullNAme { get => $"{LastName} {FirstName}"; }
+        public string FullName { get => $"{LastName} {FirstName}"; }
 
         public ICollection<Enrollment> Enrollments { get; set; }
     }
