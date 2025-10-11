@@ -37,7 +37,8 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses
+            Course course = await _context.Courses
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
@@ -50,6 +51,7 @@ namespace ContosoUniversity.Controllers
         // GET: Courses/Create
         public IActionResult Create()
         {
+            PopulateDepartmentsDropDownList();
             return View();
         }
 
@@ -82,6 +84,7 @@ namespace ContosoUniversity.Controllers
             {
                 return NotFound();
             }
+            PopulateDepartmentsDropDownList(course.DepartmentID);
             return View(course);
         }
 
@@ -120,6 +123,14 @@ namespace ContosoUniversity.Controllers
             return View(course);
         }
 
+        private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
+        {
+            IQueryable<Department> departmentsQuery = from d in _context.Departments
+                                                      orderby d.Name
+                                                      select d;
+            ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "DepartmentID", "Name", selectedDepartment);
+        }
+
         // GET: Courses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -129,6 +140,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var course = await _context.Courses
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
